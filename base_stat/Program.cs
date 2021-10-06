@@ -1,4 +1,5 @@
 ﻿using static System.Console;
+using static System.Convert;
 
 namespace base_stat
 {
@@ -8,58 +9,65 @@ namespace base_stat
         {
             Write("Сколько чисел будем анализировать? (введите количество): ");
             int n = GetIntegerNum();
-            int[] nums = new int[n];
+            int[] numbers = new int[n];
 
             for (int i = 0; i < n; i++)
             {
                 Write($"Введите {i + 1}  целое число: ");
-                nums[i] = GetIntegerNum();
+                numbers[i] = GetIntegerNum();
             }
 
-            int min = nums[0], max = nums[0], sum = 0;
-            int positiveCount = 0, negativeCount = 0, zeroCount = 0;
+            int minimal = numbers[0], maximal = numbers[0], summa = 0, positiveCount = 0, negativeCount = 0, zeroCount = 0;
 
-            foreach (int num in nums)
+            foreach (int localNumbers in numbers)
             {
-                sum += num;
-                if (min > num) min = num;
-                if (max < num) max = num;
+                summa += localNumbers;
+                if (minimal > localNumbers) minimal = localNumbers;
+                if (maximal < localNumbers) maximal = localNumbers;
 
-                if (num < 0)
+                if (localNumbers < 0)
                     negativeCount++;
-                else if (num > 0)
+                else if (localNumbers > 0)
                     positiveCount++;
                 else
                     zeroCount++;
             }
 
-            double avg = sum / n;
+            double average = ToDouble(summa / n);
 
-            WriteLine($"\nМинимальное значение:             {min}" +
-                      $"\nМаксимальное значение:            {max}" +
-                      $"\nСреднее значение:                 {avg}" +
-                      $"\nКоличество положительных чисел:   {positiveCount}" +
-                      $"\nКоличество отрицательных чисел:   {negativeCount}" +
-                      $"\nКоличество нулей:                 {zeroCount}" +
-                      $"\n\nPress F to pay respects");
+            OutputResults(minimal, maximal, average, positiveCount, negativeCount, zeroCount);
 
-            System.ConsoleKey key = ReadKey().Key;
-            while (key != System.ConsoleKey.F)
-            {
-                key = ReadKey().Key;
-            }
+            ExitProgram();
         }
 
         static int GetIntegerNum()
         {
             string amount = ReadLine();
             int n;
-            while (!int.TryParse(amount, out n) || n == 0)
+            while (!int.TryParse(amount, out n) || n <= 0)
             {
                 Write("Введено ошибочное значение! Повторите ввод: ");
                 amount = ReadLine();
             }
             return n;
+        }
+
+        static string OutputResults(int min, int max, double avg, int countPositiveNumber, int countNegativeNumber, int countZero) =>
+                        $"\nМинимальное значение:             {min}" +
+                            $"\nМаксимальное значение:            {max}" +
+                            $"\nСреднее значение:                 {avg}" +
+                            $"\nКоличество положительных чисел:   {countPositiveNumber}" +
+                            $"\nКоличество отрицательных чисел:   {countNegativeNumber}" +
+                            $"\nКоличество нулей:                 {countZero}" +
+                                $"\n\nPress F to pay respects";
+
+        static void ExitProgram()
+        {
+            System.ConsoleKey key = ReadKey().Key;
+            while (key != System.ConsoleKey.F)
+            {
+                key = ReadKey().Key;
+            }
         }
     }
 }
